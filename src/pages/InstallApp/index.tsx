@@ -1,29 +1,71 @@
-import { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { FC, memo, useEffect, useMemo, useRef, useState } from 'react';
 import * as SC from './styles';
-import Typewriter from '@/components/Typewriter';
+import Typewriter, { type TypewriterClass } from 'typewriter-effect';
+import getOSType from '@/lib/utils/getOSType';
+import downloadFile from '@/lib/utils/downloadFile';
+import { OSType } from '@/modules/OS/Core';
+import { isDevMode } from '@/lib/utils/env';
 
 interface InstallAppProps {}
 
+const downloadVSCode = async () => {
+  const osType = getOSType();
+  let baseDownloadUrl = 'https://code.visualstudio.com/sha/download?build=stable&os=';
+  switch (osType) {
+    case OSType.Windows:
+      baseDownloadUrl += 'win32-x64-user';
+      break;
+    case OSType.Mac:
+      baseDownloadUrl += 'darwin-universal';
+      break;
+    case OSType.Linux:
+      baseDownloadUrl += 'linux-x64';
+      break;
+  }
+  const vscodePath = await downloadFile(baseDownloadUrl, (progress) => {
+    if (isDevMode()) {
+      console.log('[DownloadProgress]', progress);
+    }
+  });
+  return vscodePath;
+};
+
+const DEFAULT_MESSAGES = ['欢迎使用 FE 自动配置工具', '检查配置文件...'];
+
 const InstallApp: FC<InstallAppProps> = () => {
-  const [message, setMessage] = useState('欢迎使用 FE 自动配置工具');
-  const [del, setDel] = useState(false);
-  const isCompleted = useRef(false);
+  const typewriterRef = useRef<TypewriterClass>();
 
   useEffect(() => {
-    console.log('useEffect', isCompleted.current);
-  }, [isCompleted]);
+    setTimeout(async () => {
+      const typewriter = typewriterRef.current;
+      if (!typewriter) return;
+      const osType = getOSType();
+      typewriter.typeString(`平台：${getOSType()}`).pauseFor(1000).deleteAll();
+
+      typewriter
+        .typeString('开始下载VSCode...')
+        .pauseFor(1000)
+        .callFunction(async () => {
+          typewriter
+            .deleteAll()
+            .typeString(`下载完成, VSCode地址为：${await downloadVSCode()}`)
+            .pauseFor(1000)
+            .deleteAll();
+          typewriter.typeString('开始下载Node.js...').pauseFor(1000);
+        });
+    }, 100);
+  }, []);
 
   return (
     <SC.InstallAppContainer>
       <SC.Message>
         <Typewriter
-          message={message}
-          del={del}
-          onStart={() => {
-            isCompleted.current = false;
+          options={{
+            strings: DEFAULT_MESSAGES,
+            autoStart: true,
           }}
-          onCompleted={() => {
-            isCompleted.current = true;
+          onInit={(typewriter) => {
+            typewriterRef.current = typewriter;
           }}
         />
       </SC.Message>

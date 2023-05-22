@@ -19,11 +19,11 @@ export function ipcRegister(win: BrowserWindow) {
   ipcMain.on(IPCEvent.DownloadFile, async (_event, url: string) => {
     try {
       if (!win) throw new Error('[IPCMainError] Window is not ready');
-      const item = await download(win, url, {
+      await download(win, url, {
         directory: join(__dirname, '/download'),
-        onProgress: (progress) => win?.webContents.send(IPCEvent.DownloadFileProgress, progress),
+        onProgress: (progress) => win.webContents.send(IPCEvent.DownloadFileProgress, progress),
+        onCompleted: (item) => win.webContents.send(IPCEvent.DownloadFileComplete, item.path),
       });
-      win.webContents.send(IPCEvent.DownloadFileComplete, item.getSavePath());
     } catch (error) {
       console.error(error);
       win?.webContents.send(IPCEvent.DownloadFileError, error);
