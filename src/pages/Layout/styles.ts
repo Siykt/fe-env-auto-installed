@@ -58,3 +58,14 @@ export const Author = styled.div`
   color: #ffffff80;
   transform: translateX(-50%);
 `;
+
+export const AuthorLink = styled.a`
+  margin-left: 5px;
+  font-size: 16px;
+  color: #ffffff80;
+  text-decoration: none;
+  transition: all 0.3s;
+  &:hover {
+    color: #ffffff;
+  }
+`;

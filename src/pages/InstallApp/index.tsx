@@ -6,8 +6,12 @@ interface InstallAppProps {}
 
 const InstallApp: FC<InstallAppProps> = () => {
   const [message, setMessage] = useState('欢迎使用 FE 自动配置工具');
-  const [del, setDel] = useState(true);
+  const [del, setDel] = useState(false);
   const isCompleted = useRef(false);
+
+  useEffect(() => {
+    console.log('useEffect', isCompleted.current);
+  }, [isCompleted]);
 
   return (
     <SC.InstallAppContainer>
