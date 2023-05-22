@@ -18,10 +18,11 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["src/*"],
+      "@/lib/*": ["lib/*"],
       "@/modules/*": ["modules/*"]
     },
     "types": ["vite/client"]
   },
-  "include": ["src", "electron", "modules"],
+  "include": ["src", "electron", "modules", "lib"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

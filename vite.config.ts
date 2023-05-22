@@ -17,8 +17,9 @@ export default defineConfig(({ command }) => {
   return {
     resolve: {
       alias: {
-        '@': path.join(__dirname, 'src'),
+        '@/lib': path.join(__dirname, 'lib'),
         '@/modules': path.join(__dirname, 'modules'),
+        '@': path.join(__dirname, 'src'),
       },
     },
     plugins: [
@@ -38,6 +39,7 @@ export default defineConfig(({ command }) => {
             resolve: {
               alias: {
                 '@/modules': path.join(__dirname, 'modules'),
+                '@/lib': path.join(__dirname, 'lib'),
               },
             },
             build: {

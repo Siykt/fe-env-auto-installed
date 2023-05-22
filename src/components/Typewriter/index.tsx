@@ -1,7 +1,6 @@
-import { FC, useEffect, useMemo, useState } from 'react';
-import * as SC from './styles';
-import TypewriterStore from './store';
 import { Easing, Tween, update } from '@tweenjs/tween.js';
+import { FC, useEffect, useState } from 'react';
+import * as SC from './styles';
 
 interface TypewriterProps {
   message?: string;
@@ -21,7 +20,9 @@ const Typewriter: FC<TypewriterProps> = ({ message: propMessage, del, onComplete
     const t = new Tween({ index: 0 })
       .to({ index: propMessage.length }, DEFAULT_SPEED * propMessage.length)
       .easing(Easing.Cubic.InOut)
-      .onUpdate((data) => setMassage(propMessage.slice(0, Math.round(data.index))))
+      .onUpdate((data) => {
+        setMassage(propMessage.slice(0, Math.round(data.index)));
+      })
       .onStart(onStart);
     if (del) {
       t.chain(
@@ -29,7 +30,9 @@ const Typewriter: FC<TypewriterProps> = ({ message: propMessage, del, onComplete
           .delay(DEL_DELAY)
           .to({ index: 0 }, DEFAULT_SPEED * propMessage.length)
           .easing(Easing.Cubic.InOut)
-          .onUpdate((data) => setMassage(propMessage.slice(0, Math.round(data.index))))
+          .onUpdate((data) => {
+            setMassage(propMessage.slice(0, Math.round(data.index)));
+          })
           .onComplete(onCompleted)
       );
     } else {
