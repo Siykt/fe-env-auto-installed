@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.32.0",
+    "@tweenjs/tween.js": "^20.0.3",
     "@types/lodash": "^4.14.194",
     "@types/node": "^20.2.3",
     "@types/react": "^18.0.28",
@@ -48,6 +49,7 @@
     "sass": "^1.60.0",
     "styled-components": "6.0.0-rc.1",
     "typescript": "^5.0.2",
+    "typewriter-effect": "^2.19.0",
     "valtio": "^1.10.5",
     "vite": "^4.1.4",
     "vite-plugin-electron": "^0.11.2",

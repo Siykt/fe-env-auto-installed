@@ -1,4 +1,4 @@
-import { StrictMode, Suspense } from 'react';
+import { Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { GlobalStyle } from './styles/global';
 import App from './pages/App';
@@ -9,12 +9,10 @@ export default function render() {
   if (container) {
     const root = createRoot(container);
     root.render(
-      <StrictMode>
-        <Suspense fallback={null}>
-          <GlobalStyle />
-          <App />
-        </Suspense>
-      </StrictMode>
+      <Suspense fallback={null}>
+        <GlobalStyle />
+        <App />
+      </Suspense>
     );
 
     postMessage({ payload: 'removeLoading' }, '*');
