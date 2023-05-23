@@ -6,5 +6,6 @@ export const GlobalStyle = createGlobalStyle`
   #root {
     padding: 0;
     margin: 0;
+    -webkit-app-region: drag;
   }
 `;

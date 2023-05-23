@@ -11,12 +11,20 @@ export default async function createWindow() {
   const indexHtml = join(process.env.DIST, 'index.html');
 
   win = new BrowserWindow({
-    title: 'Main window',
     icon: join(process.env.PUBLIC, 'favicon.ico'),
+    minHeight: 600,
+    minWidth: 800,
+    maxWidth: 1140,
     webPreferences: {
       preload,
       nodeIntegration: true,
       contextIsolation: false,
+    },
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#4a5358',
+      symbolColor: '#fff',
+      height: 28,
     },
   });
 
