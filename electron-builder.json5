@@ -3,6 +3,7 @@
  */
 {
   appId: 'YourAppID',
+  productName: 'FE自动配置工具',
   asar: true,
   directories: {
     output: 'release/${version}',
