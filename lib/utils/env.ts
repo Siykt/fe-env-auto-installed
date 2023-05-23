@@ -1,5 +1,6 @@
 import { OSType } from '@/modules/OS/Core';
 import getOSType from './getOSType';
+import { exec } from './command';
 
 const env = process.env || import.meta.env;
 
@@ -45,14 +46,5 @@ export async function setEnv(key: string, value: string | number) {
       return Promise.reject('Failed to set environment variable.');
   }
 
-  const childProcess = await import('node:child_process');
-  return new Promise<string>((resolve, reject) =>
-    childProcess.exec(command, (err, stdout) => {
-      if (err) reject(err);
-      else {
-        env[key] = value.toString();
-        resolve(stdout);
-      }
-    })
-  );
+  return exec(command);
 }
