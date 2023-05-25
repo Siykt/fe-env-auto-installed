@@ -48,6 +48,7 @@ export const LayoutContent = styled.div`
   width: 68vw;
   box-sizing: border-box;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  -webkit-app-region: no-drag;
 `;
 
 export const Author = styled.div`
@@ -57,6 +58,7 @@ export const Author = styled.div`
   font-size: 16px;
   color: #ffffff80;
   transform: translateX(-50%);
+  -webkit-app-region: no-drag;
 `;
 
 export const AuthorLink = styled.a`
