@@ -42,9 +42,6 @@ export const LayoutContentWrapper = styled.div`
 `;
 
 export const LayoutContent = styled.div`
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 12px;
   width: 68vw;
   box-sizing: border-box;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
@@ -54,7 +51,7 @@ export const LayoutContent = styled.div`
 export const Author = styled.div`
   position: absolute;
   left: 50%;
-  bottom: 20vh;
+  bottom: 10vh;
   font-size: 16px;
   color: #ffffff80;
   transform: translateX(-50%);
