@@ -1,8 +1,9 @@
-import { FC, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import * as SC from './styles';
-import Typewriter, { type TypewriterClass } from 'typewriter-effect';
-import InstallAPPStore from './store';
 import { AnimatePresence, useAnimate, type Variants } from 'framer-motion';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+import Typewriter, { type TypewriterClass } from 'typewriter-effect';
+import CheckEnv from './Steps/CheckEnv';
+import InstallAPPStore from './store';
+import * as SC from './styles';
 
 interface InstallAppProps {}
 
@@ -42,14 +43,18 @@ const InstallApp: FC<InstallAppProps> = () => {
           transition: { duration: 0.2 },
           background: '#282c34',
         });
-        InstallAPPStore.nextStep();
         await installAppContainerAnimate(installAppContainerScope.current, {
           transition: { duration: 0.4 },
           height: '50vh',
         });
-        typewriter.typeString('开始检查环境...').start();
+        typewriter
+          .typeString('开始检查环境...')
+          .start()
+          .callFunction(() => InstallAPPStore.nextStep());
       });
   }, [installAppContainerAnimate, installAppContainerScope]);
+
+  console.log('step ->', step);
 
   return (
     <SC.InstallAppContainer ref={installAppContainerScope}>
@@ -80,6 +85,7 @@ const InstallApp: FC<InstallAppProps> = () => {
             </SC.Button>
           )}
         </AnimatePresence>
+        {step === 3 && <CheckEnv />}
       </SC.Message>
     </SC.InstallAppContainer>
   );
