@@ -8,3 +8,8 @@ export default function getOSType(): OSType {
   if (osType.includes('linux')) return OSType.Linux;
   return OSType.Unknown;
 }
+
+export const OS_TYPE = getOSType();
+export const isWindows = () => OS_TYPE === OSType.Windows;
+export const isMac = () => OS_TYPE === OSType.Mac;
+export const isLinux = () => OS_TYPE === OSType.Linux;
