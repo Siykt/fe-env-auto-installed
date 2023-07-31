@@ -1,7 +1,6 @@
 import { ipcExec } from '@/lib/utils/command';
 import downloadFile from '@/lib/utils/downloadFile';
-import { isDevMode } from '@/lib/utils/env';
-import getOSType from '@/lib/utils/getOSType';
+import { OS_TYPE } from '@/lib/utils/getOSType';
 import { OSType } from '@/modules/OS/Core';
 import type { Progress } from 'electron-dl';
 
@@ -9,9 +8,8 @@ import type { Progress } from 'electron-dl';
  * 下载 VSCode
  */
 export const downloadVSCode = async (onProgress?: (progress: Progress) => void) => {
-  const osType = getOSType();
   let baseDownloadUrl = 'https://code.visualstudio.com/sha/download?build=stable&os=';
-  switch (osType) {
+  switch (OS_TYPE) {
     case OSType.Windows:
       baseDownloadUrl += 'win32-x64-user';
       break;
@@ -35,10 +33,8 @@ const GIT_VERSION = '2.40.1'; // Git Version 2.40.1 By 2023-04-25
  * @see https://git-scm.com/download/win
  */
 export const downloadGit = async (onProgress?: (progress: Progress) => void) => {
-  const osType = getOSType();
   const WIN_URL = `https://github.com/git-for-windows/git/releases/download/v${GIT_VERSION}.windows.1/Git-${GIT_VERSION}-64-bit.exe`;
-
-  switch (osType) {
+  switch (OS_TYPE) {
     case OSType.Windows:
       return await downloadFile(WIN_URL, onProgress);
     case OSType.Mac:
@@ -57,9 +53,8 @@ const NODEJS_VERSION = '16.20.0';
  * @see https://nodejs.org/en/download/
  */
 export const downloadNodejs = async (onProgress?: (progress: Progress) => void) => {
-  const osType = getOSType();
   let baseDownloadUrl = 'https://nodejs.org/dist';
-  switch (osType) {
+  switch (OS_TYPE) {
     case OSType.Windows:
       baseDownloadUrl += `/v${NODEJS_VERSION}/node-v${NODEJS_VERSION}-x64.msi`;
       break;
@@ -73,4 +68,21 @@ export const downloadNodejs = async (onProgress?: (progress: Progress) => void) 
       throw new Error('操作系统环境不支持');
   }
   return await downloadFile(baseDownloadUrl, onProgress);
+};
+
+/**
+ * 检查命令是否存在
+ * @param command 命令
+ */
+export const checkCommand = async (command: string) => {
+  switch (OS_TYPE) {
+    case OSType.Windows:
+      return await ipcExec(`where ${command}`);
+    case OSType.Mac:
+      return await ipcExec(`which ${command}`);
+    case OSType.Linux:
+      return await ipcExec(`which ${command}`);
+    default:
+      throw new Error('操作系统环境不支持');
+  }
 };
