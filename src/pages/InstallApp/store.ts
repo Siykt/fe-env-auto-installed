@@ -1,13 +1,15 @@
-import { TypewriterClass } from "typewriter-effect";
-import { proxy, useSnapshot } from "valtio"
+import { proxy, useSnapshot } from 'valtio';
+import { AppMap } from './types';
 
 interface State {
-  step: number
+  step: number;
+  downloadSet: Set<AppMap>;
 }
 
 class Store {
   private state: State = proxy<State>({
     step: 0,
+    downloadSet: new Set(),
   });
 
   getState() {
@@ -32,6 +34,19 @@ class Store {
   toStep(step: number) {
     this.updateState((state) => {
       state.step = step;
+    });
+  }
+
+  addDownload(app: AppMap) {
+    this.updateState((state) => {
+      state.downloadSet.add(app);
+    });
+  }
+
+  stop() {
+    this.updateState((state) => {
+      state.downloadSet.clear();
+      state.step = 999;
     });
   }
 }

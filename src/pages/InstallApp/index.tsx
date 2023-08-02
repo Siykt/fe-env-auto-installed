@@ -1,9 +1,10 @@
 import { AnimatePresence, useAnimate, type Variants } from 'framer-motion';
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
-import Typewriter, { type TypewriterClass } from 'typewriter-effect';
+import Typewriter, { TypewriterState, type TypewriterClass } from 'typewriter-effect';
 import CheckEnv from './Steps/CheckEnv';
 import InstallAPPStore from './store';
 import * as SC from './styles';
+import DownloadApp from './Steps/DownloadApp';
 
 interface InstallAppProps {}
 
@@ -17,48 +18,65 @@ const MessageVariants: Variants = {
 const InstallApp: FC<InstallAppProps> = () => {
   const [typewriterRendered, setTypewriterRendered] = useState(false);
   const typewriterRef = useRef<TypewriterClass>();
-  const { step } = InstallAPPStore.useState();
+  const { step, downloadSet } = InstallAPPStore.useState();
   const [installAppContainerScope, installAppContainerAnimate] = useAnimate();
+
+  const runTypewriter = async (str: string) => {
+    const typewriter = typewriterRef.current;
+    if (!typewriter) return Promise.reject(new Error('Typewriter not found.'));
+    return new Promise<TypewriterState>((resolve) => {
+      typewriter.deleteAll();
+      if (str) typewriter.typeString(str);
+      typewriter.start().callFunction(resolve);
+    });
+  };
 
   // Step 1
   useEffect(() => {
-    const typewriter = typewriterRef.current;
-    if (!typewriterRendered || !typewriter) return;
-    typewriter.typeString('是否开始?').callFunction(() => InstallAPPStore.nextStep());
+    if (!typewriterRendered) return;
+    runTypewriter('是否开始?').then(() => InstallAPPStore.nextStep());
     setTypewriterRendered(false);
     return () => setTypewriterRendered(false);
   }, [typewriterRendered]);
 
   // Step 2
-  const toStep2 = useCallback(() => {
+  const toStep2 = useCallback(async () => {
     InstallAPPStore.toStep(2);
-    const typewriter = typewriterRef.current;
-    if (!typewriter) return;
-
-    typewriter
-      .deleteAll()
-      .start()
-      .callFunction(async () => {
-        await installAppContainerAnimate(installAppContainerScope.current, {
-          transition: { duration: 0.2 },
-          background: '#282c34',
-        });
-        await installAppContainerAnimate(installAppContainerScope.current, {
-          transition: { duration: 0.4 },
-          height: '50vh',
-        });
-        typewriter
-          .typeString('开始检查环境...')
-          .start()
-          .callFunction(() => InstallAPPStore.nextStep());
-      });
+    await runTypewriter('');
+    await installAppContainerAnimate(installAppContainerScope.current, {
+      transition: { duration: 0.2 },
+      background: '#282c34',
+    });
+    await installAppContainerAnimate(installAppContainerScope.current, {
+      transition: { duration: 0.4 },
+      height: '50vh',
+    });
+    await runTypewriter('开始检查环境...');
+    InstallAPPStore.nextStep();
   }, [installAppContainerAnimate, installAppContainerScope]);
+
+  // Step 3 Pass
+  // Step 4
+  useEffect(() => {
+    if (step !== 4) return;
+    if (downloadSet.size > 0) {
+      runTypewriter('开始下载APP...').then(() => InstallAPPStore.nextStep());
+    } else {
+      runTypewriter('没有需要下载的APP！').then(() => InstallAPPStore.stop());
+    }
+  }, [downloadSet, step]);
+
+  // Stop
+  useEffect(() => {
+    if (step !== 999) return;
+    runTypewriter('全部环境已安装！感谢使用，欢迎<a href="https://github.com/Siykt/fe-env-auto-installed">Star</a>！');
+  }, [step]);
 
   console.log('step ->', step);
 
   return (
     <SC.InstallAppContainer ref={installAppContainerScope}>
-      <SC.Message variants={MessageVariants} animate={step > 2 ? 'runtime' : 'init'}>
+      <SC.Message variants={MessageVariants} animate={step > 1 ? 'runtime' : 'init'}>
         <Typewriter
           options={{
             strings: DEFAULT_MESSAGES,
@@ -85,8 +103,9 @@ const InstallApp: FC<InstallAppProps> = () => {
             </SC.Button>
           )}
         </AnimatePresence>
-        {step === 3 && <CheckEnv />}
       </SC.Message>
+      {step === 3 && <CheckEnv />}
+      {step === 5 && <DownloadApp />}
     </SC.InstallAppContainer>
   );
 };

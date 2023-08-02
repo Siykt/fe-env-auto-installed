@@ -2,10 +2,14 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
 export const InstallAppContainer = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   width: 100%;
   padding: 20px;
   background-color: #fff;
   border-radius: 12px;
+  overflow: hidden;
 `;
 
 export const Message = styled(motion.div)`
@@ -16,10 +20,10 @@ export const Message = styled(motion.div)`
   transition: all 0.3s;
   cursor: default;
   a {
-    color: #333;
+    color: inherit;
     text-decoration: none;
     &:hover {
-      color: #000;
+      color: #333;
     }
   }
   &:hover {

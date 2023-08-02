@@ -8,4 +8,8 @@ export const GlobalStyle = createGlobalStyle`
     margin: 0;
     -webkit-app-region: drag;
   }
+
+  * {
+    box-sizing: border-box;
+  }
 `;
