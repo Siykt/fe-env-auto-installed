@@ -1,7 +1,20 @@
 import styled from 'styled-components';
 import { Message as MSG } from '../styles';
+import { motion, MotionProps } from 'framer-motion';
+import { forwardRef } from 'react';
 
-export const StepsContainer = styled.div`
+const MotionDiv = forwardRef<HTMLDivElement, MotionProps>((props, ref) => (
+  <motion.div
+    ref={ref}
+    transition={{ duration: 0.2 }}
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0.7 }}
+    {...props}
+  />
+));
+
+export const StepsContainer = styled(MotionDiv)`
   display: flex;
   flex-direction: column;
   gap: 8px;
