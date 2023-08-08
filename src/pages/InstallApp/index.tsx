@@ -5,10 +5,11 @@ import CheckEnv from './Steps/CheckEnv';
 import InstallAPPStore from './store';
 import * as SC from './styles';
 import DownloadApp from './Steps/DownloadApp';
+import DownloadZSHPlugins from './Steps/DownloadZSHPlugins';
 
 interface InstallAppProps {}
 
-const DEFAULT_MESSAGES = ['欢迎使用 FE 自动配置工具', '作者：<a href="https://github.com/Siykt">Siykt</a>'];
+const DEFAULT_MESSAGES = ['欢迎使用 FE 自动配置工具', '本工具将帮你检查与配置前端开发环境'];
 
 const MessageVariants: Variants = {
   init: { color: '#666' },
@@ -62,8 +63,21 @@ const InstallApp: FC<InstallAppProps> = () => {
     if (downloadSet.size > 0) {
       runTypewriter('开始下载APP...').then(() => InstallAPPStore.nextStep());
     } else {
-      runTypewriter('没有需要下载的APP！').then(() => InstallAPPStore.stop());
+      runTypewriter('没有需要下载的APP').then(() => InstallAPPStore.toStep(6));
     }
+  }, [downloadSet, step]);
+
+  // Step 5 Pass
+  // Step 6
+  useEffect(() => {
+    if (step !== 6) return;
+    runTypewriter('开始安装ZSH Plugins...').then(() => InstallAPPStore.nextStep());
+  }, [downloadSet, step]);
+
+  // Step 7
+  useEffect(() => {
+    if (step !== 6) return;
+    runTypewriter('请选择你需要安装的ZSH Plugins');
   }, [downloadSet, step]);
 
   // Stop
@@ -104,8 +118,11 @@ const InstallApp: FC<InstallAppProps> = () => {
           )}
         </AnimatePresence>
       </SC.Message>
-      {step === 3 && <CheckEnv />}
-      {step === 5 && <DownloadApp />}
+      <AnimatePresence>
+        {[3, 4].includes(step) && <CheckEnv />}
+        {step === 5 && <DownloadApp />}
+        {step === 7 && <DownloadZSHPlugins />}
+      </AnimatePresence>
     </SC.InstallAppContainer>
   );
 };

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Message as MSG } from '../styles';
+import { Message as MSG, Button as BTN } from '../styles';
 import { motion, MotionProps } from 'framer-motion';
 import { forwardRef } from 'react';
 
@@ -42,4 +42,41 @@ export const Message = styled(MSG)`
   &:hover {
     color: #fff;
   }
+`;
+
+export const CheckboxContainer = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  color: #999;
+  &:hover {
+    color: #fff;
+  }
+`;
+
+export const Checkbox = styled.div<{ checked?: boolean }>`
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  border-radius: 2px;
+  border: 1px solid #999;
+  background: ${(props) => (props.checked ? '#999' : 'transparent')};
+  cursor: pointer;
+  transition: background 0.2s;
+  &:hover {
+    background: #999;
+  }
+`;
+
+export const Button = styled(BTN)`
+  position: static;
+  right: unset;
+  top: unset;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  margin-top: 16px;
 `;
