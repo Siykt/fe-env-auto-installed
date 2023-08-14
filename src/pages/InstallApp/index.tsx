@@ -71,13 +71,9 @@ const InstallApp: FC<InstallAppProps> = () => {
   // Step 6
   useEffect(() => {
     if (step !== 6) return;
-    runTypewriter('开始安装ZSH Plugins...').then(() => InstallAPPStore.nextStep());
-  }, [downloadSet, step]);
-
-  // Step 7
-  useEffect(() => {
-    if (step !== 6) return;
-    runTypewriter('请选择你需要安装的ZSH Plugins');
+    runTypewriter('开始安装ZSH Plugins...')
+      .then(() => runTypewriter('请选择你需要安装的ZSH Plugins'))
+      .then(() => InstallAPPStore.nextStep());
   }, [downloadSet, step]);
 
   // Stop
