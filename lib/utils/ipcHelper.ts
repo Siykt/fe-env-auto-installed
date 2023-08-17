@@ -1,15 +1,12 @@
 import type { IPCChannel } from '@/modules/IPCEvent/Core';
 import { ipcRenderer } from 'electron';
-import { nanoid } from 'nanoid';
 
 export function getUniqueIPCChannel(channel: IPCChannel, uid: string) {
   return `${channel}-${uid}`;
 }
 
-export function onUniqueIPCChannel(
-  channel: IPCChannel,
-  callback: Parameters<typeof ipcRenderer.on>[1]
-): readonly [string, () => void] {
+export async function onUniqueIPCChannel(channel: IPCChannel, callback: Parameters<typeof ipcRenderer.on>[1]) {
+  const { nanoid } = await import('nanoid');
   const uid = nanoid();
   const uniqueIChannel = getUniqueIPCChannel(channel, uid);
   ipcRenderer.on(uniqueIChannel, callback);
