@@ -1,4 +1,4 @@
-export enum IPCEvent {
+export enum IPCChannel {
   // 下载文件
   DownloadFile = 'DownloadFile',
   DownloadFileError = 'DownloadFileError',

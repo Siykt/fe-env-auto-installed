@@ -1,12 +1,13 @@
 import { ipcRenderer } from 'electron';
-import { IPCEvent } from '@/modules/IPCEvent/Core';
+import { IPCChannel } from '@/modules/IPCEvent/Core';
 import type { Progress } from 'electron-dl';
+import { onUniqueIPCChannel } from './ipcHelper';
 
-export default function downloadFile(url: string, onProgress?: (progress: Progress) => void) {
-  return new Promise<string>((resolve, reject) => {
-    ipcRenderer.send(IPCEvent.DownloadFile, url);
-    ipcRenderer.on(IPCEvent.DownloadFileComplete, (_event, data) => resolve(data));
-    ipcRenderer.on(IPCEvent.DownloadFileError, (_event, error) => reject(error));
-    ipcRenderer.on(IPCEvent.DownloadFileProgress, (_event, progress) => onProgress?.(progress));
-  });
+export async function downloadFileUseIPC(url: string, onProgress?: (progress: Progress) => void): Promise<string> {
+  const [uid, cannel] = onUniqueIPCChannel(IPCChannel.DownloadFileProgress, (_, progress: Progress) =>
+    onProgress?.(progress)
+  );
+  const path = await ipcRenderer.invoke(IPCChannel.DownloadFile, uid, url);
+  cannel();
+  return path;
 }

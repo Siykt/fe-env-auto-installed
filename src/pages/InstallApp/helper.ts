@@ -1,5 +1,5 @@
 import { ipcExec } from '@/lib/utils/command';
-import downloadFile from '@/lib/utils/downloadFile';
+import { downloadFileUseIPC } from '@/lib/utils/downloadFile';
 import { OS_TYPE } from '@/lib/utils/getOSType';
 import { OSType } from '@/modules/OS/Core';
 import type { Progress } from 'electron-dl';
@@ -22,7 +22,7 @@ export const downloadVSCode = async (onProgress?: (progress: Progress) => void) 
     default:
       throw new Error('操作系统环境不支持');
   }
-  return await downloadFile(baseDownloadUrl, onProgress);
+  return await downloadFileUseIPC(baseDownloadUrl, onProgress);
 };
 
 // TODO 可以考虑通过抓取GIT官网的版本号来实现自动更新
@@ -36,7 +36,7 @@ export const downloadGit = async (onProgress?: (progress: Progress) => void) => 
   const WIN_URL = `https://github.com/git-for-windows/git/releases/download/v${GIT_VERSION}.windows.1/Git-${GIT_VERSION}-64-bit.exe`;
   switch (OS_TYPE) {
     case OSType.Windows:
-      return await downloadFile(WIN_URL, onProgress);
+      return await downloadFileUseIPC(WIN_URL, onProgress);
     case OSType.Mac:
       return await ipcExec('brew install git');
     case OSType.Linux:
@@ -67,7 +67,7 @@ export const downloadNodejs = async (onProgress?: (progress: Progress) => void) 
     default:
       throw new Error('操作系统环境不支持');
   }
-  return await downloadFile(baseDownloadUrl, onProgress);
+  return await downloadFileUseIPC(baseDownloadUrl, onProgress);
 };
 
 /**

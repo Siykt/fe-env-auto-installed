@@ -1,32 +1,33 @@
-import { IPCEvent } from '@/modules/IPCEvent/Core';
-import { BrowserWindow, ipcMain, shell } from 'electron';
-import { download } from 'electron-dl';
 import { exec } from '@/lib/utils/command';
+import { getUniqueIPCChannel } from '@/lib/utils/ipcHelper';
+import { IPCChannel } from '@/modules/IPCEvent/Core';
+import { BrowserWindow, ipcMain } from 'electron';
+import { download } from 'electron-dl';
 import { join } from 'node:path';
 
-export function ipcRegister(win: BrowserWindow) {
+export function registerIPCHandle(win: BrowserWindow) {
   // 下载文件
-  ipcMain.on(IPCEvent.DownloadFile, async (_event, url: string) => {
+  ipcMain.handle(IPCChannel.DownloadFile, async (_event, uid: string, url: string) => {
     try {
-      await download(win, url, {
+      const { savePath } = await download(win, url, {
         directory: join(__dirname, '/download'),
-        onProgress: (progress) => win.webContents.send(IPCEvent.DownloadFileProgress, progress),
-        onCompleted: (item) => win.webContents.send(IPCEvent.DownloadFileComplete, item.path),
+        onProgress: (progress) =>
+          win.webContents.send(getUniqueIPCChannel(IPCChannel.DownloadFileProgress, uid), progress),
       });
+      return savePath;
     } catch (error) {
       console.error(error);
-      win.webContents.send(IPCEvent.DownloadFileError, error);
+      throw error;
     }
   });
 
   // 执行命令
-  ipcMain.on(IPCEvent.Exec, async (_event, command: string, args: string[]) => {
+  ipcMain.handle(IPCChannel.Exec, (_event, command: string, args: string[]) => {
     try {
-      const stdout = await exec(command);
-      win.webContents.send(IPCEvent.ExecReply, stdout.toString());
+      return exec(command);
     } catch (error) {
       console.error(error);
-      win.webContents.send(IPCEvent.ExecError, error);
+      throw error;
     }
   });
 }

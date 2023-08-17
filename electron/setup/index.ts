@@ -4,7 +4,7 @@ import { app, BrowserWindow } from 'electron';
 import { release } from 'node:os';
 import { join } from 'node:path';
 import createWindow, { clearMainWindow, getMainWindow } from './createWindow';
-import { ipcRegister } from './ipc';
+import { registerIPCHandle } from './ipc';
 
 process.env.DIST_ELECTRON = join(__dirname, '../');
 process.env.DIST = join(process.env.DIST_ELECTRON, '../dist');
@@ -25,7 +25,7 @@ export default async function setup() {
 
   let win = getMainWindow();
 
-  if (win) ipcRegister(win);
+  if (win) registerIPCHandle(win);
 
   app.on('window-all-closed', () => {
     clearMainWindow();
@@ -46,7 +46,7 @@ export default async function setup() {
     } else {
       await createWindow();
       win = getMainWindow();
-      if (win) ipcRegister(win);
+      if (win) registerIPCHandle(win);
     }
   });
 }
