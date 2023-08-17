@@ -5,17 +5,6 @@ import { exec } from '@/lib/utils/command';
 import { join } from 'node:path';
 
 export function ipcRegister(win: BrowserWindow) {
-  // Test actively push message to the Electron-Renderer
-  win.webContents.on('did-finish-load', () => {
-    win.webContents.send('main-process-message', new Date().toLocaleString());
-  });
-
-  // Make all links open with the browser, not with the application
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('http')) shell.openExternal(url);
-    return { action: 'deny' };
-  });
-
   // 下载文件
   ipcMain.on(IPCEvent.DownloadFile, async (_event, url: string) => {
     try {
