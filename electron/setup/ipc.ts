@@ -12,6 +12,7 @@ export function registerIPCHandle(win: BrowserWindow) {
       const { savePath } = await download(win, url, {
         directory: join(__dirname, '/download'),
         onProgress: (progress) =>
+          // 通过唯一的IPCChannel来发送进度
           win.webContents.send(getUniqueIPCChannel(IPCChannel.DownloadFileProgress, uid), progress),
       });
       return savePath;
