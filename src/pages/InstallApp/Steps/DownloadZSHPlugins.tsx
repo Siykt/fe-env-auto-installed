@@ -40,9 +40,9 @@ const DownloadZSHPlugins: FC<DownloadZSHPluginsProps> = () => {
       ))}
       <SC.Button
         transition={{ duration: 0.2 }}
-        whileHover={{ scale: 1.2, backgroundColor: '#f2f6f9' }}
+        whileHover={{ scale: 1.2 }}
         whileTap={{ scale: 0.9, transition: { duration: 0.1 } }}
-        style={{ y: '-50%' }}
+        style={{ y: '-30%' }}
         onClick={() => {
           console.log(pluginIndexList);
         }}

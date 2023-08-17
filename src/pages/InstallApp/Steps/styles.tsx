@@ -79,4 +79,6 @@ export const Button = styled(BTN)`
   margin-right: auto;
   width: fit-content;
   margin-top: 16px;
+  color: #fff;
+  background-color: transparent;
 `;
